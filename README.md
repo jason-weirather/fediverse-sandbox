@@ -3,7 +3,7 @@ Spin up multiple activitypub servers to test the fediverse
 
 ### For a local test set up domains ending with .local to resolve to `127.0.0.1`
 
-#### Mac OS
+#### Mac OS local network
 
 Install dnsmasq:
 ```bash
@@ -59,3 +59,28 @@ Explanation:
 * `dnsmasq.conf`: The line `address=/.local/127.0.0.1` tells dnsmasq to resolve any domain ending with .local to 127.0.0.1.
 * `/etc/resolver/local`: This file tells macOS to use `dnsmasq` (running on 127.0.0.1) for resolving .local domains.
 
+## Setting up your certs
+
+Create a directory for your certificates if it doesn't already exist:
+```bash
+mkdir -p ./certs
+```
+
+Generate self-signed certificates for each domain:
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./certs/snac1.test.key -out ./certs/snac1.test.crt -subj "/CN=snac1.test"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./certs/snac2.test.key -out ./certs/snac2.test.crt -subj "/CN=snac2.test"
+```
+
+Create a directory structure for the vhost configuration files:
+```bash
+mkdir -p ./nginx/vhost.d
+```
+
+Create a default configuration for your domains in `./nginx/vhost.d/`:
+```bash
+echo 'proxy_set_header Host $host;' > ./nginx/vhost.d/default
+echo 'proxy_set_header X-Real-IP $remote_addr;' >> ./nginx/vhost.d/default
+echo 'proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> ./nginx/vhost.d/default
+echo 'proxy_set_header X-Forwarded-Proto $scheme;' >> ./nginx/vhost.d/default
+```
