@@ -14,8 +14,6 @@ services:
     environment:
       - VIRTUAL_HOST=snac1.test
       - VIRTUAL_PORT=8001  # Internal container port for Nginx
-      - LETSENCRYPT_HOST=snac1.test
-      - LETSENCRYPT_EMAIL=your-email@example.com
 
   snac2:
     image: vacation/snac:latest
@@ -30,29 +28,14 @@ services:
     environment:
       - VIRTUAL_HOST=snac2.test
       - VIRTUAL_PORT=8001  # Internal container port for Nginx
-      - LETSENCRYPT_HOST=snac2.test
-      - LETSENCRYPT_EMAIL=your-email@example.com
 
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    container_name: nginx-proxy
+  nginx:
+    image: nginx:latest
+    container_name: nginx
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./certs:/etc/nginx/certs:ro
-      - ./nginx/vhost.d:/etc/nginx/vhost.d
-      - ./nginx/html:/usr/share/nginx/html
-
-  letsencrypt-nginx-proxy-companion:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: letsencrypt-nginx-proxy-companion
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./certs:/etc/nginx/certs:rw
-      - ./nginx/vhost.d:/etc/nginx/vhost.d:rw
-    environment:
-      - NGINX_PROXY_CONTAINER=nginx-proxy
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certs:/etc/nginx/certs
