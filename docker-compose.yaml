@@ -10,15 +10,19 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - ./data1:/data
+      - ./apps/snac1/data:/data
     ports:
       - "8001:8001"
     environment:
       - VIRTUAL_HOST=snac1.test
       - VIRTUAL_PORT=8001
+    #dns:
+    #  - 127.0.0.11
 
   ktistec1:
-    image: vacation/ktistec:2.0.0-11
+    build:
+      context: .
+      dockerfile: apps/ktistec1/Dockerfile
     container_name: ktistec1
     restart: unless-stopped
     security_opt:
@@ -30,9 +34,13 @@ services:
     environment:
       - VIRTUAL_HOST=ktistec1.test
       - VIRTUAL_PORT=3000
+    #dns:
+    #  - 127.0.0.11
 
   ktistec2:
-    image: vacation/ktistec:2.0.0-11
+    build:
+      context: .
+      dockerfile: apps/ktistec2/Dockerfile
     container_name: ktistec2
     restart: unless-stopped
     security_opt:
@@ -44,6 +52,8 @@ services:
     environment:
       - VIRTUAL_HOST=ktistec2.test
       - VIRTUAL_PORT=3000
+    #dns:
+    #  - 127.0.0.11
 
   nginx:
     build:
@@ -58,3 +68,7 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./certs:/etc/ssl/certs
       - ./certs:/etc/ssl/private
+
+networks:
+  default:
+    name: custom-network

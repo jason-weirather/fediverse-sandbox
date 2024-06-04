@@ -176,6 +176,12 @@ Add the `myCA.pem` to Keychain Access
 * Set "When using this certificate" to "Always Trust".
 * Close the certificate properties window. You may be prompted to enter your password to confirm the changes.
 
+Copy your `myCA.pem` into `./certs`
+```bash
+cp ~/certs/myCA.pem ./certs/myCA.pem
+```
+
+
 ## Setting up your certs
 
 Create a directory for your certificates if it doesn't already exist:
