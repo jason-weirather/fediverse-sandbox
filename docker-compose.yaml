@@ -10,31 +10,45 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - ./apps/snac1/data:/data
+      - ./data1:/data
     ports:
-      - "8001:8001"  # Map host port 8001 to container port 8001
+      - "8001:8001"
     environment:
       - VIRTUAL_HOST=snac1.test
-      - VIRTUAL_PORT=8001  # Internal container port for Nginx
+      - VIRTUAL_PORT=8001
 
-  snac2:
-    build:
-      context: .
-      dockerfile: apps/snac2/Dockerfile
-    container_name: snac2
+  ktistec1:
+    image: vacation/ktistec:2.0.0-11
+    container_name: ktistec1
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     volumes:
-      - ./apps/snac2/data:/data
+      - ./apps/ktistec1/data:/db
     ports:
-      - "8002:8001"  # Map host port 8002 to container port 8001
+      - "3000:3000"
     environment:
-      - VIRTUAL_HOST=snac2.test
-      - VIRTUAL_PORT=8001  # Internal container port for Nginx
+      - VIRTUAL_HOST=ktistec1.test
+      - VIRTUAL_PORT=3000
+
+  ktistec2:
+    image: vacation/ktistec:2.0.0-11
+    container_name: ktistec2
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./apps/ktistec2/data:/db
+    ports:
+      - "3001:3000"
+    environment:
+      - VIRTUAL_HOST=ktistec2.test
+      - VIRTUAL_PORT=3000
 
   nginx:
-    image: nginx:latest
+    build:
+      context: .
+      dockerfile: apps/nginx/Dockerfile
     container_name: nginx
     restart: unless-stopped
     ports:
@@ -42,4 +56,5 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./certs:/etc/nginx/certs
+      - ./certs:/etc/ssl/certs
+      - ./certs:/etc/ssl/private
