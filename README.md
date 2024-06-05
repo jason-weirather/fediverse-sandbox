@@ -181,3 +181,12 @@ Copy your `myCA.pem` into `./certs`
 cp ~/certs/myCA.pem ./certs/myCA.pem
 ```
 
+# Configure fediverse servers
+
+## `snac1`
+
+1. Generate a new password
+
+```bash
+bash utilities/reset_and_get_snac_passwords.sh
+```

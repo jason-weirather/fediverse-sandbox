@@ -16,8 +16,13 @@ services:
     environment:
       - VIRTUAL_HOST=snac1.test
       - VIRTUAL_PORT=8001
-    #dns:
-    #  - 127.0.0.11
+    extra_hosts:
+      - "snac1.test:172.18.0.5"
+      - "ktistec1.test:172.18.0.5"
+      - "ktistec2.test:172.18.0.5"
+    networks:
+      custom-network:
+        ipv4_address: 172.18.0.4
 
   ktistec1:
     build:
@@ -34,8 +39,13 @@ services:
     environment:
       - VIRTUAL_HOST=ktistec1.test
       - VIRTUAL_PORT=3000
-    #dns:
-    #  - 127.0.0.11
+    extra_hosts:
+      - "snac1.test:172.18.0.5"
+      - "ktistec1.test:172.18.0.5"
+      - "ktistec2.test:172.18.0.5"
+    networks:
+      custom-network:
+        ipv4_address: 172.18.0.3
 
   ktistec2:
     build:
@@ -52,8 +62,13 @@ services:
     environment:
       - VIRTUAL_HOST=ktistec2.test
       - VIRTUAL_PORT=3000
-    #dns:
-    #  - 127.0.0.11
+    extra_hosts:
+      - "snac1.test:172.18.0.5"
+      - "ktistec1.test:172.18.0.5"
+      - "ktistec2.test:172.18.0.5"
+    networks:
+      custom-network:
+        ipv4_address: 172.18.0.2
 
   nginx:
     build:
@@ -68,7 +83,12 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./certs:/etc/ssl/certs
       - ./certs:/etc/ssl/private
+    networks:
+      custom-network:
+        ipv4_address: 172.18.0.5
 
 networks:
-  default:
-    name: custom-network
+  custom-network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
