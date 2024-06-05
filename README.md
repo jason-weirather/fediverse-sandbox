@@ -181,30 +181,3 @@ Copy your `myCA.pem` into `./certs`
 cp ~/certs/myCA.pem ./certs/myCA.pem
 ```
 
-
-## Setting up your certs
-
-Create a directory for your certificates if it doesn't already exist:
-```bash
-mkdir -p ./certs
-```
-
-Generate self-signed certificates for each domain:
-```bash
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./certs/snac1.test.key -out ./certs/snac1.test.crt -subj "/CN=snac1.test"
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./certs/ktistec1.test.key -out ./certs/ktistec1.test.crt -subj "/CN=ktistec1.test"
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./certs/ktistec2.test.key -out ./certs/ktistec2.test.crt -subj "/CN=ktistec2.test"
-```
-
-Create a directory structure for the vhost configuration files:
-```bash
-mkdir -p ./nginx/vhost.d
-```
-
-Create a default configuration for your domains in `./nginx/vhost.d/`:
-```bash
-echo 'proxy_set_header Host $host;' > ./nginx/vhost.d/default
-echo 'proxy_set_header X-Real-IP $remote_addr;' >> ./nginx/vhost.d/default
-echo 'proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> ./nginx/vhost.d/default
-echo 'proxy_set_header X-Forwarded-Proto $scheme;' >> ./nginx/vhost.d/default
-```
