@@ -13,11 +13,6 @@ The fediverse-sandbox project provides a local testing environment for experimen
 2. **Homebrew** installed on macOS for managing packages.
 3. **Keychain Access** for managing certificates on macOS.
 
-### Setup a local network for testing Activity Pub servers
-#
-#1. All domains ending in `*.test` will resolve ports on `127.0.0.1`
-#2. We will set up a local Certificate Authority for our `*.test` domains
-
 ### 1. Configure DNS Resolution on localhost with `dnsmasq`
 
 Install `dnsmasq`:
